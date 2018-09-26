@@ -190,6 +190,9 @@ public class VelocityTeleop
 					
 					/* Determine which slot affects which PID */
 					RRCanTalon.selectProfileSlot(Constants.kSlot_Velocit, Constants.PID_PRIMARY);
+					
+					// Set left talon to follow the right.
+					LRCanTalon.follow(RRCanTalon);
 				}
 				
 				/* Calculate targets from JS inputs * rpm max */
@@ -200,7 +203,7 @@ public class VelocityTeleop
 				/* Configured for Velocity Closed Loop on Quad Encoders' Sum and Arbitrary FeedForward on joyX */
 				RRCanTalon.set(ControlMode.Velocity, target_unitsPer100ms, DemandType.ArbitraryFeedForward, feedFwdTerm);
 				
-				LRCanTalon.follow(RRCanTalon);
+				//LRCanTalon.follow(RRCanTalon);
 				
 				Util.consoleLog("ry=%.2f rx=%.2f  mo=%.2f  vel=%d  rpm=%d", forward, turn, 
 						RRCanTalon.getMotorOutputPercent(),

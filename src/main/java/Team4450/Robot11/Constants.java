@@ -48,6 +48,11 @@ public class Constants
 	public final static Gains kGains_Velocit = new Gains( 0.2, 0.0, 20.0, 1023.0/1760.0,  300,  1.00 ); /* measured 1760 velocity units at full motor output */
 	public final static Gains kGains_MotProf = new Gains( 1.0, 0.0,  0.0, 1023.0/1760.0,  400,  1.00 ); /* measured 1760 velocity units at full motor output */
 	
+	/**
+	 * Internally, the Talons power range is +-0 to 1023. So to determine the feed forward factor, we
+	 * divide the max observed ticks/100ms value into 1023 to get the FF factor.
+	 */
+	
 	/** ---- Flat constants, you should not need to change these ---- */
 	/* We allow either a 0 or 1 when selecting an ordinal for remote devices [You can have up to 2 devices assigned remotely to a talon/victor] */
 	public final static int REMOTE_0 = 0;

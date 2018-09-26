@@ -33,7 +33,7 @@ eclipse {
     }
 }
 
-// Look in local maven cache first then jitpack for dependant libraries.
+// Look in local maven cache first then jitpack for dependent libraries.
 repositories {
 	mavenLocal()
 	maven { url 'https://jitpack.io' }
