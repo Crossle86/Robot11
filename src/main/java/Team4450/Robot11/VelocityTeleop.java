@@ -15,6 +15,7 @@ import Team4450.Lib.SRXMagneticEncoderRelative.PIDRateType;
 import Team4450.Lib.Util;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VelocityTeleop 
 {
@@ -238,6 +239,10 @@ public class VelocityTeleop
 			
 			/* Recreated variables */
 			_firstCall = false;
+			
+			// Update the robot heading indicator on the DS.
+
+			SmartDashboard.putNumber("Gyro", Devices.navx.getHeadingInt());
 			
 			Timer.delay(.020);	// wait 20ms for update from driver station.
 		}

@@ -17,6 +17,7 @@ import Team4450.Lib.Util;
 import Team4450.Lib.SRXMagneticEncoderRelative.PIDRateType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VelocityTeleop2 
 {
@@ -293,6 +294,13 @@ public class VelocityTeleop2
 			LCD.printLine(10, "rpm=%d avg=%d  max=%d  maxrate=%d", Devices.rightEncoder.getRPM(),
 					avgRpm, Devices.rightEncoder.getMaxRPM(), 
 					Devices.rightEncoder.getMaxRate(PIDRateType.ticksPer100ms));
+
+			// Update the robot heading indicator on the DS.
+
+			//SmartDashboard.putNumber("Gyro", Devices.navx.getHeadingInt());
+			
+			// Cause smartdashboard to update any registered Sendables.
+			SmartDashboard.updateValues();
 			
 			Timer.delay(.020);	// wait 20ms for update from driver station.			
 		}
