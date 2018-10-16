@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot 
 {
-  static final String  	PROGRAM_NAME = "RAC11PF-10.10.18-02";
+  static final String  	PROGRAM_NAME = "RAC11PF-10.15.18-01";
 
   public Properties		robotProperties;
   
@@ -134,7 +134,8 @@ public class Robot extends SampleRobot
    		Devices.navx.dumpValuesToNetworkTables();
 
    		// Add navx as a Sendable. Updates the Gyro indicator automatically when 
-   		// SmartDashboard.updateValues() is called.
+   		// SmartDashboard.updateValues() is called elsewhere.
+   		
    		SmartDashboard.putData("Gyro", Devices.navx);
 
    		// Start the battery, compressor, PDP and camera feed monitoring Tasks.
@@ -155,6 +156,10 @@ public class Robot extends SampleRobot
        	cameraThread = CameraFeed.getInstance(); 
        	cameraThread.start();
 		
+       	// Configure autonomous program choices.
+       	
+       	Autonomous.setAutoChoices();
+       	
        	lastRobotState = currentRobotState;
        	
    		Util.consoleLog("end");

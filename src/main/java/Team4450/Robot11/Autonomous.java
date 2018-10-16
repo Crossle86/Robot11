@@ -12,6 +12,7 @@ import Team4450.Robot11.Devices;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
 //import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
@@ -23,9 +24,11 @@ import jaci.pathfinder.modifiers.TankModifier;
 
 public class Autonomous
 {
-	private final Robot		robot;
-	private final int		program = (int) SmartDashboard.getNumber("AutoProgramSelect",0);
-	private final GearBox	gearBox;
+	private final Robot			robot;
+	private int					program = (int) SmartDashboard.getNumber("AutoProgramSelect",0);
+	private final GearBox		gearBox;
+	
+	private static SendableChooser<Integer>	autoChooser;
 	
 	Autonomous(Robot robot)
 	{
@@ -47,13 +50,40 @@ public class Autonomous
 	{
 		return robot.isEnabled() && robot.isAutonomous();
 	}
+	
+	// Configure SendableChooser with auto program choices and
+	// send them to SmartDashboard/ShuffleBoard. Called a robot
+	// program start up to get dash board ready before anything
+	// happens.
+	
+	public static void setAutoChoices()
+	{
+		Util.consoleLog();
+		
+		autoChooser = new SendableChooser<Integer>();
+		
+		autoChooser.setName("Auto Program");
+		autoChooser.addDefault("No Program", 0);
+		autoChooser.addObject("Pathfinder Test", 1);
+		autoChooser.addObject("Velocity Test 1", 2);
+		autoChooser.addObject("Velocity Test 2", 3);
+		autoChooser.addObject("Velocity Test 3", 4);
+		
+		SmartDashboard.putData(autoChooser);
+	}
+
+	// Launch autonomous mode execution.
 
 	public void execute()
 	{
+		program = autoChooser.getSelected();
+		
 		Util.consoleLog("Alliance=%s, Location=%d, Program=%d, FMS=%b, msg=%s", robot.alliance.name(), robot.location, program, 
 				Devices.ds.isFMSAttached(), robot.gameMessage);
 		LCD.printLine(2, "Alliance=%s, Location=%d, FMS=%b, Program=%d, msg=%s", robot.alliance.name(), robot.location, 
 				Devices.ds.isFMSAttached(), program, robot.gameMessage);
+		
+		program = autoChooser.getSelected();
 		
 		Devices.robotDrive.setSafetyEnabled(false);
 
@@ -98,7 +128,8 @@ public class Autonomous
 		
 		// Update the robot heading indicator on the DS.
 
-		SmartDashboard.putNumber("Gyro", Devices.navx.getHeadingInt());
+		//SmartDashboard.putNumber("Gyro", Devices.navx.getHeadingInt());
+		SmartDashboard.updateValues();
 		
 		Util.consoleLog("final heading=%.2f  R=%.2f", Devices.navx.getHeading(), Devices.navx.getHeadingR());
 		

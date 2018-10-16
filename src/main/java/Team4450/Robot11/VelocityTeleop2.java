@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import Team4450.Lib.LCD;
 import Team4450.Lib.Util;
 import Team4450.Lib.SRXMagneticEncoderRelative.PIDRateType;
+import Team4450.Lib.SynchronousPID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -53,6 +54,11 @@ public class VelocityTeleop2
 	{
 		int		count = 0, totalRpm = 0, avgRpm = 0, totalError = 0, avgError = 0;
 		double 	_targetAngle = 0, target_unitsPer100ms = 0;
+		
+		SynchronousPID pidTest = new SynchronousPID(1,2,3,4);
+		pidTest.setSetpoint(99);
+		
+		SmartDashboard.putData(pidTest);
 		
 		final int MAX_RPM = 258;
 		
