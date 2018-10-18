@@ -74,6 +74,11 @@ class Teleop
 
 		LCD.printLine(1, "Mode: OperatorControl");
 		LCD.printLine(2, "All=%s, Start=%d, FMS=%b", robot.alliance.name(), robot.location, Devices.ds.isFMSAttached());
+		
+		// Set synchronousPID as a sendable for testing.
+		SynchronousPID pidTest = new SynchronousPID(1,2,3,4);
+		pidTest.setSetpoint(99);		
+		SmartDashboard.putData(pidTest);
 
 		// Configure LaunchPad and Joystick event handlers.
 
@@ -267,6 +272,9 @@ class Teleop
 			// Update the robot heading indicator on the DS.
 
 			SmartDashboard.putNumber("Gyro", Devices.navx.getHeadingInt());
+			
+			// Cause smartdashboard to update any registered Sendables.
+			SmartDashboard.updateValues();
 
 			// End of driving loop.
 

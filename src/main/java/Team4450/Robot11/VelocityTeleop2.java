@@ -303,7 +303,7 @@ public class VelocityTeleop2
 
 			// Update the robot heading indicator on the DS.
 
-			//SmartDashboard.putNumber("Gyro", Devices.navx.getHeadingInt());
+			SmartDashboard.putNumber("Gyro", Devices.navx.getHeadingInt());
 			
 			// Cause smartdashboard to update any registered Sendables.
 			SmartDashboard.updateValues();

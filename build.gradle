@@ -41,7 +41,7 @@ repositories {
 
 // Defining dependencies. In this case, WPILib (+ friends), CTRE Phoenix (Talon SRX), NavX, RobotLib
 // and the local pathfinder project jar. RobotLib is downloaded from Jitpack by version number or commit id. 
-// Change 'local' to RobotLib version, commit id or master-SNAPSHOT for most recent.
+// Change 'local' to desired RobotLib version, commit id or master-SNAPSHOT for most recent.
 dependencies {
     compile wpilib()
     compile "com.github.ORF-4450:RobotLib:local"
@@ -49,12 +49,41 @@ dependencies {
     compile files("C:\\Users\\rcorn\\wpilib\\user\\RobotLib\\Pathfinder-java-1.8.jar")
 }
 
+def branch = { ->
+    def stdout = new ByteArrayOutputStream()
+    
+    exec {
+        commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
+        standardOutput = stdout
+    }
+    
+    return stdout.toString().trim()
+}
+
+def hash = { ->
+    def stdout = new ByteArrayOutputStream()
+    
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    
+    return stdout.toString().trim()
+}
+
 // Setting up robot program Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
-// knows where to look for our Robot Class.
+// knows where to look for our Robot Class. Add version information to jar manifest.
 jar {
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
         manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_CLASS)
+        
+        manifest {
+         	attributes("Branch": branch())
+        	attributes("Commit": hash())
+           	attributes("Time": new Date().format("yyyy-MM-dd HH:mm:ss"))
+        	attributes("User": System.getProperty("user.name"))
+    	}
 }
 
 task wrapper(type: Wrapper) {

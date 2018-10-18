@@ -13,6 +13,7 @@ import Team4450.Robot11.Devices;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -25,7 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot 
 {
-  static final String  	PROGRAM_NAME = "RAC11PF-10.15.18-01";
+  static final String  	PROGRAM_NAME = "RAC11PF-10.18.18-01";
 
   public Properties		robotProperties;
   
@@ -69,6 +70,16 @@ public class Robot extends SampleRobot
 		Util.consoleLog(PROGRAM_NAME);
 
     	Util.consoleLog("RobotLib=%s", LibraryVersion.version);
+
+    	// Create SendableVersion object so we can send it to the dashboard and
+    	// log some of it's information.
+    	
+    	SendableVersion.INSTANCE.init(PROGRAM_NAME);
+  		
+   		Util.consoleLog("compiled by %s at %s (branch=%s, commit=%s)", SendableVersion.INSTANCE.getUser(),
+   				SendableVersion.INSTANCE.getTime(), SendableVersion.INSTANCE.getBranch(),
+   				SendableVersion.INSTANCE.getCommit());
+
     }
     catch (Exception e) {Util.logException(e);}
   }
@@ -81,7 +92,7 @@ public class Robot extends SampleRobot
     {
    		Util.consoleLog();
         
-        lastRobotState = RobotState.init;
+        currentRobotState = RobotState.init;
 
    		LCD.clearAll();
    		LCD.printLine(1, "Mode: RobotInit");
@@ -97,7 +108,15 @@ public class Robot extends SampleRobot
 		else
 			isClone = true;
 
-   		SmartDashboard.putString("Program", PROGRAM_NAME);
+		// Send program version to the dashboard.
+   		
+		SmartDashboard.putString("Program", PROGRAM_NAME);
+   		
+   		SmartDashboard.putData(SendableVersion.INSTANCE);
+   		
+   		// Set compressor enabled switch on dashboard from properties file.
+   		// Later code will read that setting from the dashboard and turn 
+   		// compressor on or off in response to dashboard setting.
    		
    		SmartDashboard.putBoolean("CompressorEnabled", Boolean.parseBoolean(robotProperties.getProperty("CompressorEnabledByDefault")));
 
@@ -122,6 +141,8 @@ public class Robot extends SampleRobot
 		
    		if (isComp) Devices.winchEncoder.setReverseDirection(false);
 
+   		// Configure starting motor safety;
+   		
    		Devices.robotDrive.stopMotor();
    		Devices.robotDrive.setSafetyEnabled(false);
    		Devices.robotDrive.setExpiration(0.1);
@@ -131,12 +152,12 @@ public class Robot extends SampleRobot
 
    		Devices.navx = NavX.getInstance(NavX.PortType.SPI);
    		
-   		Devices.navx.dumpValuesToNetworkTables();
+   		//Devices.navx.dumpValuesToNetworkTables();
 
    		// Add navx as a Sendable. Updates the Gyro indicator automatically when 
    		// SmartDashboard.updateValues() is called elsewhere.
    		
-   		SmartDashboard.putData("Gyro", Devices.navx);
+   		SmartDashboard.putData("Gyro2", Devices.navx);
 
    		// Start the battery, compressor, PDP and camera feed monitoring Tasks.
 
@@ -151,15 +172,15 @@ public class Robot extends SampleRobot
    		//monitorPDPThread = MonitorPDP.getInstance(ds, PDP);
    		//monitorPDPThread.start();
 
-   		// Start camera server using our class for usb cameras.
+   		// Start camera server thread using our class for usb cameras.
       
        	cameraThread = CameraFeed.getInstance(); 
        	cameraThread.start();
 		
-       	// Configure autonomous program choices.
+       	// Configure autonomous program choices sendable chooser.
        	
        	Autonomous.setAutoChoices();
-       	
+
        	lastRobotState = currentRobotState;
        	
    		Util.consoleLog("end");
@@ -175,10 +196,10 @@ public class Robot extends SampleRobot
 	  {
 		  Util.consoleLog();
           
-          lastRobotState = RobotState.disabled;
+          currentRobotState = RobotState.disabled;
 
 		  LCD.printLine(1, "Mode: Disabled");
-
+		  
 		  // Reset driver station LEDs.
 
 		  SmartDashboard.putBoolean("Disabled", true);
@@ -189,6 +210,8 @@ public class Robot extends SampleRobot
 		  SmartDashboard.putBoolean("TargetLocked", false);
 		  SmartDashboard.putBoolean("Overload", false);
 		  SmartDashboard.putNumber("AirPressure", 0);
+
+		  lastRobotState = currentRobotState;
 
 		  Util.consoleLog("end");
 	  }
@@ -203,7 +226,7 @@ public class Robot extends SampleRobot
       {
     	  Util.consoleLog();
           
-          lastRobotState = RobotState.auto;
+          currentRobotState = RobotState.auto;
 
     	  LCD.clearAll();
     	  LCD.printLine(1, "Mode: Autonomous");
@@ -225,7 +248,7 @@ public class Robot extends SampleRobot
     	  autonomous = new Autonomous(this);
         
     	  autonomous.execute();
-    	  
+
     	  lastRobotState = currentRobotState;
       }
       catch (Exception e) {Util.logException(e);}
@@ -266,14 +289,14 @@ public class Robot extends SampleRobot
         
           // Start operator control process contained in the Teleop class.
         
-          //teleOp = new Teleop(this);
+          teleOp = new Teleop(this);
        
-          //teleOp.OperatorControl();
+          teleOp.OperatorControl();
           
-          VelocityTeleop2 vTeleOp = new VelocityTeleop2(this);
+          //VelocityTeleop2 vTeleOp = new VelocityTeleop2(this);
           
-          vTeleOp.OperatorControl();
-          
+          //vTeleOp.OperatorControl();
+
           lastRobotState = currentRobotState;
        }
        catch (Exception e) {Util.logException(e);} 
@@ -291,8 +314,8 @@ public class Robot extends SampleRobot
 	  Util.consoleLog();
 	  
 	  currentRobotState = RobotState.test;
-	  
-	  lastRobotState = currentRobotState;
+
+      lastRobotState = currentRobotState;
   }
 
   // Start usb camera server for single camera.
