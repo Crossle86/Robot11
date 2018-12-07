@@ -33,9 +33,10 @@ eclipse {
     }
 }
 
-// Look in local maven cache first then jitpack for dependent libraries.
+// Look in local maven cache first, then maven central, then jitpack for dependent libraries.
 repositories {
 	mavenLocal()
+	mavenCentral()
 	maven { url 'https://jitpack.io' }
 }
 
@@ -47,6 +48,7 @@ dependencies {
     compile "com.github.ORF-4450:RobotLib:local"
     //compile files("C:\\Users\\rcorn\\wpilib\\user\\RobotLib\\RobotLib.jar")
     compile files("C:\\Users\\rcorn\\wpilib\\user\\RobotLib\\Pathfinder-java-1.8.jar")
+    compile "org.joml:joml:1.9.12"
 }
 
 def branch = { ->

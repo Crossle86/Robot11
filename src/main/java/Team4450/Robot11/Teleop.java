@@ -3,6 +3,8 @@ package Team4450.Robot11;
 
 import java.lang.Math;
 
+import org.opencv.core.Rect;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
@@ -24,6 +26,7 @@ class Teleop
 	private GearBox				gearBox;
 	private Lift				lift;
 	private Grabber				grabber;
+	private boolean				target;
 
 	// Constructor.
 
@@ -348,11 +351,21 @@ class Teleop
 					break;
 					
 				case BUTTON_YELLOW:
-					if (lift.isBrakeEngaged())
-						lift.releaseBrake();
+					if (!target)
+					{
+						robot.cameraThread.addTargetRectangle(new Rect(10,10,100,100));
+						robot.cameraThread.addTargetRectangle(new Rect(150,150,50,50));
+						robot.cameraThread.setTargetWidth(2);
+						robot.vision.seekBlock();
+						target = !target;
+					}
 					else
-						lift.engageBrake();
-
+					{
+						robot.cameraThread.addTargetRectangle(null);
+						robot.cameraThread.setContours(null);
+						target = !target;
+					}
+					
 					break;
 					
 				case BUTTON_BLUE_RIGHT:
@@ -363,17 +376,6 @@ class Teleop
 						grabber.startAutoIntake();
 					
 					break;
-					
-//				case BUTTON_YELLOW:
-//					if (lift.isHoldingHeight())
-//						lift.setHeight(-1);
-//					else
-//						if (robot.isClone)
-//							lift.setHeight(14000);
-//						else
-//							lift.setHeight(7900);
-					
-//					break;
 					
 				case BUTTON_GREEN:
 					Devices.wheelEncoder.reset();

@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import Team4450.Lib.*;
 import Team4450.Robot11.Devices;
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
@@ -26,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot 
 {
-  static final String  	PROGRAM_NAME = "RAC11PF-10.18.18-01";
+  static final String  	PROGRAM_NAME = "RAC11PF-12.07.18-01";
 
   public Properties		robotProperties;
   
@@ -41,6 +42,8 @@ public class Robot extends SampleRobot
   Thread               	monitorBatteryThread, monitorPDPThread;
   MonitorCompressor		monitorCompressorThread;
   CameraFeed			cameraThread;
+  Vision				vision = Vision.getInstance(this);
+  ExternalCameraFeed	feed;
   
   Teleop 				teleOp;
   Autonomous 			autonomous;
@@ -55,7 +58,7 @@ public class Robot extends SampleRobot
 	{
 		Util.CustomLogger.setup();
 		
-		// Catch any uncaught exceptions and record them in our log file. 
+		// Set Java to catch any uncaught exceptions and record them in our log file. 
 		
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() 
 		{
@@ -71,7 +74,7 @@ public class Robot extends SampleRobot
 
     	Util.consoleLog("RobotLib=%s", LibraryVersion.version);
 
-    	// Create SendableVersion object so we can send it to the dashboard and
+    	// Create SendableVersion object so it will be sent to the dashboard and
     	// log some of it's information.
     	
     	SendableVersion.INSTANCE.init(PROGRAM_NAME);
@@ -176,7 +179,9 @@ public class Robot extends SampleRobot
       
        	cameraThread = CameraFeed.getInstance(); 
        	cameraThread.start();
-		
+       	//feed = new ExternalCameraFeed(this);
+       	//feed.start();
+       	
        	// Configure autonomous program choices sendable chooser.
        	
        	Autonomous.setAutoChoices();

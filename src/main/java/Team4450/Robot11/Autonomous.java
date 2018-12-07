@@ -83,8 +83,6 @@ public class Autonomous
 		LCD.printLine(2, "Alliance=%s, Location=%d, FMS=%b, Program=%d, msg=%s", robot.alliance.name(), robot.location, 
 				Devices.ds.isFMSAttached(), program, robot.gameMessage);
 		
-		program = autoChooser.getSelected();
-		
 		Devices.robotDrive.setSafetyEnabled(false);
 
 		// Initialize encoders.
