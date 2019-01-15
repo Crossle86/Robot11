@@ -118,7 +118,7 @@ public class Devices
 		  LFCanTalon.set(ControlMode.Follower, LRCanTalon.getDeviceID());
 		  RFCanTalon.set(ControlMode.Follower, RRCanTalon.getDeviceID());
 		  
-		  // Configure SRX encoders as needed for testing.
+		  // Configure SRX encoders as needed for testing. Wheel 5.8 inches in diameter.
 		  rightEncoder = new SRXMagneticEncoderRelative(RRCanTalon, 5.8);
 		  leftEncoder = new SRXMagneticEncoderRelative(LRCanTalon, 5.8);
 		  

@@ -17,6 +17,13 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+// Self contained teleop drive code using velocity control on TalonSRX using internal
+// pid loop to control motor speed. This code asks for speed in rpm scaled by joystick Y
+// up to a max rpm and pid loop controls the motor to reach and maintain speed. Left side
+// motors follow right side as we run the pid loop in RR talon. We can turn by using x axis
+// as a feed forward term on the pid loop. Not sure how this works but it does. We also
+// read both encoders from the RR pid and average them for velocity tracking. 
+
 public class VelocityTeleop 
 {
 	private final Robot	robot;

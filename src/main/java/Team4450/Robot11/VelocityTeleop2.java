@@ -20,6 +20,12 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+// Same as VelocityTelop but with second pid loop on RR talon that tries to keep the encoder
+// counts the same while first pid loop controls velocity. This makes the robot drive in a
+// straight line unless you add in some bias with the joystick x axis to make a turn. Once
+// the bias is removed (x back to center) the turn stops and you drive straight on the new
+// heading.
+
 public class VelocityTeleop2 
 {
 	Robot	robot;

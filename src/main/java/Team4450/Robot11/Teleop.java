@@ -13,6 +13,7 @@ import Team4450.Lib.JoyStick.*;
 import Team4450.Lib.LaunchPad.*;
 import Team4450.Lib.SRXMagneticEncoderRelative.*;
 import Team4450.Robot11.Devices;
+import Team4450.Robot11.Pathing.RobotPosition;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -278,6 +279,8 @@ class Teleop
 			
 			// Cause smartdashboard to update any registered Sendables.
 			SmartDashboard.updateValues();
+			
+			RobotPosition.INSTANCE.updateDashboard();
 
 			// End of driving loop.
 
@@ -343,10 +346,7 @@ class Teleop
 					break;
 					
 				case BUTTON_RED_RIGHT:
-					if (grabber.isDeployed())
-						grabber.retract();
-					else
-						grabber.deploy();
+					RobotPosition.INSTANCE.resetRobotPose(0, 0, 0);
 					
 					break;
 					
@@ -586,6 +586,11 @@ class Teleop
 		}
 	}
 	
+	// Drive with velocity control, 100 rpm max scaled by right joystick Y axis.
+	// Sets desired velocity into pid loop inside Talonsrx controller which then
+	// maintains that speed. This is used for static testing, does not control
+	// both sides of motors.
+	
 	void OperatorControl2()
 	{
 		double targetVelocity_UnitsPer100ms = 0;
@@ -598,7 +603,7 @@ class Teleop
 		Devices.RRCanTalon.setSensorPhase(true);
 		Devices.RRCanTalon.setInverted(false);
 
-		 /* set the peak, nominal outputs, and deadband */
+		 /* set the peak, nominal outputs */
 		 Devices.RRCanTalon.configNominalOutputForward(0, 30);
 		 Devices.RRCanTalon.configNominalOutputReverse(0, 30);
 		 Devices.RRCanTalon.configPeakOutputForward(1, 30);

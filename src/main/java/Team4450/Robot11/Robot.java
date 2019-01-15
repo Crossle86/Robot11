@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import Team4450.Lib.*;
 import Team4450.Robot11.Devices;
+import Team4450.Robot11.Pathing.RobotPosition;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,7 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot 
 {
-  static final String  	PROGRAM_NAME = "RAC11PF-12.07.18-01";
+  static final String  	PROGRAM_NAME = "RAC11PF-01.07.19-01";
 
   public Properties		robotProperties;
   
@@ -185,7 +186,16 @@ public class Robot extends SampleRobot
        	// Configure autonomous program choices sendable chooser.
        	
        	Autonomous.setAutoChoices();
-
+       	
+       	// Start robot location tracking.
+       	
+       	RobotPosition.INSTANCE.init(Devices.leftEncoder, Devices.rightEncoder, Devices.navx);
+  		
+       	// Add RobotPosition as a Sendable. Updates the Pose in network tables automatically when 
+   		// SmartDashboard.updateValues() is called elsewhere.
+   		
+   		SmartDashboard.putData("Pose", RobotPosition.INSTANCE);
+   		
        	lastRobotState = currentRobotState;
        	
    		Util.consoleLog("end");

@@ -1,7 +1,7 @@
 package Team4450.Robot11;
 
 /**
- *  Class that organizes gains used when assigning values to slots
+ *  Class that organizes gains used when assigning values to TalonSrx pid slots
  */
 public class Gains 
 {

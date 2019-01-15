@@ -1,5 +1,7 @@
 package Team4450.Robot11;
 
+// Various configuration constants used by the velocity control teleop examples.
+
 public class Constants
 {
 	/**
